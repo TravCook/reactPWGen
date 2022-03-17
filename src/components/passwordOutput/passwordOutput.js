@@ -40,37 +40,49 @@ function PasswordOutput(){
     const special = ['@', '%', '+', '\\', '/', "'", '!', '#', '$', '^', '?', ':', ',', ')', '(', '}', '{', ']', '[', '~', '-', '_', '.']
     const number = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
     let possibleCharacters = []
+    let guaranteed = []
     if(lowerCheck){
       possibleCharacters = possibleCharacters.concat(lowCase)
+      guaranteed.push(getRandom(lowCase))
     }
     if(upperCheck){
       possibleCharacters = possibleCharacters.concat(uppCase)
+      guaranteed.push(getRandom(uppCase))
     }
     if(specialCheck){
       possibleCharacters = possibleCharacters.concat(special)
+      guaranteed.push(getRandom(special))
     }
     if(numberCheck){
       possibleCharacters = possibleCharacters.concat(number)
+      guaranteed.push(getRandom(number))
     }
-    console.log(possibleCharacters)
-    console.log("Length: "+ length)
-    for(let i=0; i<length; i++){
-      passwordArr.push(getRandom(possibleCharacters))
+    if(length > 7 && length < 129 ){
+      for(let i=0; i<length; i++){
+        passwordArr.push(getRandom(possibleCharacters))
+      }
+      for(let i=0; i<guaranteed.length; i++){
+        passwordArr[i] = guaranteed[i]
+      }
+      setPass(passwordArr.join(""))
+    }else{
+      let errormess = "Please pick a valid password length between 8 and 128 characters"
+      setPass(errormess)
     }
-    console.log(passwordArr)
-    setPass(passwordArr.join(""))
+    
     
   }
 
   return (
     <div className="container-fluid parentContainer">
       <div className="row justify-content-center">
-        <div className="col-6 textOutput">{password}</div>
+        <div className="col-9 textOutput">{password}</div>
       </div>
-      <Form>
+      <Form className="col-8 center">
         <div className="row optionRow">
           <Form.Group controlId="formLowercase" className="col">
-            <Form.Check 
+            <Form.Check
+              
               type="checkbox"
               checked={lowerCheck}
               onChange={handleLCchange}
@@ -100,6 +112,7 @@ function PasswordOutput(){
               label="Special Characters" />
           </Form.Group>
         </div>
+        <div className="center">
         <Form.Group>
           <Form.Label>Password Length: </Form.Label>
           <Form.Control 
@@ -107,6 +120,7 @@ function PasswordOutput(){
             type="text" 
             placeholder="please enter a number between 8 and 128" />
         </Form.Group>
+        </div>
       </Form>
       
       <div className="row justify-content-center">
